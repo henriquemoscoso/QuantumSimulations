@@ -20,7 +20,7 @@ def B_to_NV_frame(B_lab, nv_axis):
     """
     Converte um vetor de campo no LAB para componentes (Bx,By,Bz)
     no referencial do NV onde z || nv_axis.
-    (Implementa a ideia do Eq. 3.1: BNVi = Bin · TNVi) :contentReference[oaicite:9]{index=9}
+  
     """
     z = _unit(nv_axis)
 
@@ -43,7 +43,7 @@ def esr_transition_spectrum_single_nv(
     Bmw_G_nv=(1.0, 0.0, 0.0)
 ):
     """
-    Calcula ESR(ϖ) (Eq. 3.3) para UM NV com campo já expresso no frame do NV. :contentReference[oaicite:10]{index=10}
+    Calcula ESR UM NV com campo já expresso no frame do NV. 
     """
     Hgs = build_H_gs_14N(Egs_MHz=Egs_MHz, B_G=Bvec_G_nv)
     evals, evecs = eigh(Hgs)
@@ -75,14 +75,14 @@ def odmr_ensemble_14N(
     include_VN=True
 ):
     """
-    - Ensemble: soma sobre orientações NV (e opcionalmente VN), como descrito no texto. :contentReference[oaicite:11]{index=11}
-    - ODMR: I(ϖ)=R[1-ω ESR(ϖ)] (Eq. 3.4). :contentReference[oaicite:12]{index=12}
+    - Ensemble: soma sobre orientações NV (e opcionalmente VN)
+    - ODMR: I(ϖ)=R[1-ω ESR(ϖ)] (Eq. 3.4). 
     """
     w = np.linspace(wmin, wmax, npts)
 
     B_lab = B_G * _unit(B_dir_lab)
 
-    # quatro eixos cristalográficos do ensemble (subseção 2.5) :contentReference[oaicite:13]{index=13}
+    # quatro eixos cristalográficos do ensemble 
     nv_axes = [
         _unit(( 1,  1,  1)),
         _unit((-1, -1,  1)),
@@ -106,7 +106,7 @@ def odmr_ensemble_14N(
 
     ESR_total /= len(axes)
 
-    # normaliza o "ESR" para que ω controle a profundidade como no ajuste do TCC
+    # normaliza o "ESR" para que ω controle a profundidade 
     if ESR_total.max() > 0:
         ESRn = ESR_total / ESR_total.max()
     else:
@@ -118,9 +118,9 @@ def odmr_ensemble_14N(
 
 # %% 
 if __name__ == "__main__":
-    # Parâmetros da Fig. 12 :contentReference[oaicite:15]{index=15}
+  
     w, I = odmr_ensemble_14N(
-        B_G=50.0,
+        B_G=100.0,
         B_dir_lab=(0.0, 0.0, 1.0),
         Egs_MHz=0.2,
         linewidth_MHz=1.6,
