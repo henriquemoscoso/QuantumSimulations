@@ -133,6 +133,9 @@ def odmr_ensemble_14N(
 
     return w, I, ESR_total
 # %%
+'''
+PLOT DO SINAL ODMR
+'''
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -163,56 +166,4 @@ plt.title(f"ODMR: fixed B={Bfix} G, varying MW amplitude")
 plt.legend()
 plt.tight_layout()
 plt.show()
-
-# %%
-import numpy as np
-import matplotlib.pyplot as plt
-
-def odmr_map_B_vs_freq(B_list, Bmw, omega=0.01):
-    wmin, wmax, npts = 2800, 2900, 2000
-    w = np.linspace(wmin, wmax, npts)
-    I_map = np.zeros((len(B_list), len(w)))
-
-    # referência para normalização global (pega máximo no maior B do range)
-    _, _, ESR_ref = odmr_ensemble_14N(
-        B_G=max(B_list),
-        Bmw_G_nv=(Bmw,0,0),
-        normalize_mode="off",
-        wmin=wmin, wmax=wmax, npts=npts
-    )
-    ESR_ref_max = ESR_ref.max()
-
-    for i, B_G in enumerate(B_list):
-        _, I, _ = odmr_ensemble_14N(
-            B_G=B_G,
-            Bmw_G_nv=(Bmw,0,0),
-            omega=omega,
-            normalize_mode="global",
-            ESR_ref_max=ESR_ref_max,
-            wmin=wmin, wmax=wmax, npts=npts
-        )
-        I_map[i,:] = I
-
-    return w, I_map
-
-B_list = np.linspace(0, 150, 120)
-Bmw_list = [0.2, 1.0, 3.0]
-
-for Bmw in Bmw_list:
-    w, I_map = odmr_map_B_vs_freq(B_list, Bmw)
-
-    plt.figure(figsize=(8,5))
-    plt.imshow(
-        I_map,
-        extent=[w.min(), w.max(), B_list.min(), B_list.max()],
-        aspect="auto",
-        origin="lower"
-    )
-    plt.xlabel("Frequency (MHz)")
-    plt.ylabel("B (G)")
-    plt.title(f"ODMR map (MW amplitude Bmw = {Bmw} G)")
-    plt.colorbar(label="ODMR intensity (a.u.)")
-    plt.tight_layout()
-    plt.show()
-
 # %%
